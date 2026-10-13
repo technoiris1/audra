@@ -1,29 +1,54 @@
-<% content_for :title, "Tracks" %>
 
-<div class="w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
-  <% end %>
-
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">Tracks</h1>
-    <%= link_to "New track", new_track_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
+<div class="library-header">
+  <div>
+    <p class="eyebrow">YOUR COLLECTION</p>
+    <h1>Your library</h1>
+    <p class="muted">Every track, all in one place.</p>
   </div>
 
-  <div id="tracks" class="min-w-full divide-y divide-gray-200 space-y-5">
-    <% if @tracks.any? %>
-      <% @tracks.each do |track| %>
-        <div class="flex flex-col sm:flex-row justify-between items-center pb-5 sm:pb-0">
-          <%= render track %>
-          <div class="w-full sm:w-auto flex flex-col sm:flex-row space-x-2 space-y-2">
-            <%= link_to "Show", track, class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= link_to "Edit", edit_track_path(track), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= button_to "Destroy", track, method: :delete, class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
+  <%= link_to "+ Add music", new_track_path,
+      class: "button-primary" %>
+</div>
+
+<div class="library-meta">
+  <span><%= @tracks.count %> tracks</span>
+</div>
+
+<% if @tracks.any? %>
+  <div class="track-grid">
+    <% @tracks.each do |track| %>
+      <article class="track-card">
+        <%= link_to track_path(track), class: "track-card-link" do %>
+          <div class="track-art">
+            <% if track.respond_to?(:cover) && track.cover.attached? %>
+              <%= image_tag track.cover %>
+            <% else %>
+              <span>♫</span>
+            <% end %>
           </div>
-        </div>
-      <% end %>
-    <% else %>
-      <p class="text-center my-10">No tracks found.</p>
+
+          <h3 class="track-title">
+            <%= track.title %>
+          </h3>
+
+          <p class="track-artist">
+            <%= track.artist.presence || "Unknown artist" %>
+          </p>
+
+          <% if track.album.present? %>
+            <p class="track-album"><%= track.album %></p>
+          <% end %>
+        <% end %>
+      </article>
     <% end %>
   </div>
-</div>
+<% else %>
+  <div class="empty-state">
+    <div class="empty-icon">♫</div>
+    <h2>Your library is waiting.</h2>
+    <p class="muted">Add your first track to get started.</p>
+
+    <%= link_to "Add your first track", new_track_path,
+        class: "button-primary" %>
+  </div>
+<% end %>
