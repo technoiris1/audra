@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Audra" %></title>
+    <title><%= content_for(:title) || "Audra" %> | Audra</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Audra">
@@ -23,8 +23,34 @@
   </head>
 
   <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <%= yield %>
-    </main>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <%= link_to tracks_path, class: "brand" do %>
+          <span class="brand-mark">a</span>
+          <span>audra</span>
+        <% end %>
+        <nav class="sidebar-nav" aria-label="Primary navigation">
+          <%= link_to tracks_path, class: "nav-link #{'is-active' if controller_name == 'tracks' && action_name == 'index'}" do %>
+            <span class="nav-icon">[ ]</span>
+            <span>All tracks</span>
+          <% end %>
+          <%= link_to new_track_path, class: "nav-link #{'is-active' if controller_name == 'tracks' && %w[new create].include?(action_name)}" do %>
+            <span class="nav-icon">+</span>
+            <span>Add music</span>
+          <% end %>
+        </nav>
+
+        <div class="sidebar-footer">
+          <p>Made with <3 | <a href="https://github.com/technoiris1/audra" class = "href" target="_blank" rel="noopener noreferrer">Github</a></p>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <% if notice.present? %>
+          <div class="flash" role="status"><%= notice %></div>
+        <% end %>
+        <%= yield %>
+      </main>
+    </div>
   </body>
 </html>

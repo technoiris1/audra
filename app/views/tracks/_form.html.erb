@@ -1,6 +1,6 @@
-<%= form_with(model: track, class: "contents") do |form| %>
+<%= form_with(model: track, class: "track-form") do |form| %>
   <% if track.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+    <div id="error_explanation" class="form-errors">
       <h2><%= pluralize(track.errors.count, "error") %> prohibited this track from being saved:</h2>
 
       <ul class="list-disc ml-6">
@@ -11,26 +11,28 @@
     </div>
   <% end %>
 
-  <div class="my-5">
+  <div class="form-field">
     <%= form.label :title %>
-    <%= form.text_field :title, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": track.errors[:title].none?, "border-red-400 focus:outline-red-600": track.errors[:title].any?}] %>
+    <%= form.text_field :title, placeholder: "Song title", class: "form-input" %>
   </div>
 
-  <div class="my-5">
+  <div class="form-field">
     <%= form.label :artist %>
-    <%= form.text_field :artist, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": track.errors[:artist].none?, "border-red-400 focus:outline-red-600": track.errors[:artist].any?}] %>
+    <%= form.text_field :artist, placeholder: "Who made it?", class: "form-input" %>
   </div>
 
-  <div class="my-5">
+  <div class="form-field">
     <%= form.label :album %>
-    <%= form.text_field :album, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": track.errors[:album].none?, "border-red-400 focus:outline-red-600": track.errors[:album].any?}] %>
+    <%= form.text_field :album, placeholder: "Album name", class: "form-input" %>
   </div>
 
-  <div class="inline">
-    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  <div class="form-field">
+    <%= form.label :audio_file, "Audio file" %>
+    <%= form.file_field :audio_file, accept: "audio/*", class: "form-file" %>
+    <span class="field-hint">MP3, WAV, M4A, or another audio file.</span>
   </div>
-  <div>
-  <%= form.label :audio_file, "Audio file" %>
-  <%= form.file_field :audio_file, accept: "audio/*" %>
-</div>
+
+  <div class="form-actions">
+    <%= form.submit track.persisted? ? "Save changes" : "Add to library", class: "button-primary" %>
+  </div>
 <% end %>

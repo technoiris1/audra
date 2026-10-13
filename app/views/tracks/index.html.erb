@@ -1,17 +1,18 @@
 
-<div class="library-header">
+<div class="page-heading">
   <div>
-    <p class="eyebrow">YOUR COLLECTION</p>
-    <h1>Your library</h1>
-    <p class="muted">Every track, all in one place.</p>
+    <h1>Library</h1>
   </div>
 
-  <%= link_to "+ Add music", new_track_path,
-      class: "button-primary" %>
+  <%= link_to new_track_path, class: "button-primary" do %>
+    <span class="button-icon">+</span>
+    <span>Add music</span>
+  <% end %>
 </div>
 
-<div class="library-meta">
-  <span><%= @tracks.count %> tracks</span>
+<div class="library-toolbar">
+  <span><%= @tracks.count %> <%= "track".pluralize(@tracks.count) %></span>
+  <span class="toolbar-note">Recently added</span>
 </div>
 
 <% if @tracks.any? %>
@@ -23,7 +24,7 @@
             <% if track.respond_to?(:cover) && track.cover.attached? %>
               <%= image_tag track.cover %>
             <% else %>
-              <span>♫</span>
+              <span class="track-art-note">A</span>
             <% end %>
           </div>
 
@@ -44,7 +45,7 @@
   </div>
 <% else %>
   <div class="empty-state">
-    <div class="empty-icon">♫</div>
+    <div class="empty-icon">A</div>
     <h2>Your library is waiting.</h2>
     <p class="muted">Add your first track to get started.</p>
 

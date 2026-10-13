@@ -1,22 +1,28 @@
 <% content_for :title, "Showing track" %>
 
-<div class="md:w-2/3 w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
+<div class="detail-page">
+  <div class="page-kicker">YOUR COLLECTION / TRACK</div>
+  <h1><%= @track.title %></h1>
+
+  <div class="detail-summary">
+    <div class="detail-art">A</div>
+    <div>
+      <h2><%= @track.title %></h2>
+      <p><span class="detail-label">Artist</span><%= @track.artist.presence || "Unknown artist" %></p>
+      <p><span class="detail-label">Album</span><%= @track.album.presence || "Single" %></p>
+    </div>
+  </div>
+
+  <% if @track.audio_file.attached? %>
+    <audio controls preload="metadata" class="audio-player">
+      <source src="<%= url_for(@track.audio_file) %>">
+      Your browser does not support audio playback.
+    </audio>
   <% end %>
 
-  <h1 class="font-bold text-4xl">Showing track</h1>
-
-  <%= render @track %>
-
-  <%= link_to "Edit this track", edit_track_path(@track), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= link_to "Back to tracks", tracks_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= button_to "Destroy this track", @track, method: :delete, form_class: "sm:inline-block mt-2 sm:mt-0 sm:ml-2", class: "w-full rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
-  <% if @track.audio_file.attached? %>
-  <audio controls preload="metadata" style="width: 100%">
-    <source src="<%= url_for(@track.audio_file) %>">
-    Your browser does not support audio playback.
-  </audio>
-<% end %>
-
+  <div class="detail-actions">
+    <%= link_to "Edit track", edit_track_path(@track), class: "button-primary" %>
+    <%= link_to "Back to library", tracks_path, class: "button-secondary" %>
+    <%= button_to "Delete", @track, method: :delete, class: "button-danger", data: { turbo_confirm: "Are you sure?" } %>
   </div>
+</div>
