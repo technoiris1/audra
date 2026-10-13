@@ -19,15 +19,28 @@
   <div class="track-grid">
     <% @tracks.each do |track| %>
       <article class="track-card">
-        <%= link_to track_path(track), class: "track-card-link" do %>
-          <div class="track-art">
+        <div class="track-art">
+          <%= link_to track_path(track), class: "track-card-link" do %>
             <% if track.respond_to?(:cover) && track.cover.attached? %>
               <%= image_tag track.cover %>
             <% else %>
               <span class="track-art-note">A</span>
             <% end %>
-          </div>
+          <% end %>
+          <% if track.audio_file.attached? %>
+            <button type="button"
+                    class="track-play-button"
+                    data-player-track
+                    data-player-title="<%= track.title %>"
+                    data-player-artist="<%= track.artist.presence || 'Unknown artist' %>"
+                    data-player-url="<%= url_for(track.audio_file) %>"
+                    aria-label="Play <%= track.title %>">
+              <span aria-hidden="true">▶</span>
+            </button>
+          <% end %>
+        </div>
 
+        <%= link_to track_path(track), class: "track-card-link" do %>
           <h3 class="track-title">
             <%= track.title %>
           </h3>
