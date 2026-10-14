@@ -14,8 +14,12 @@
     const progressThumb = playerBar.querySelector("[data-player-progress-thumb]");
     const currentTime = playerBar.querySelector("[data-player-current]");
     const duration = playerBar.querySelector("[data-player-duration]");
+    const volume = playerBar.querySelector("[data-player-volume]");
+    const volumeToggle = playerBar.querySelector("[data-player-volume-toggle]");
+    const volumeIcon = playerBar.querySelector("[data-player-volume-icon]");
     let animationFrame;
     let isDragging = false;
+    let lastVolume = Number(volume.value);
 
     const formatTime = (seconds) => {
       if (!Number.isFinite(seconds)) return "0:00";
@@ -37,6 +41,14 @@
       currentTime.textContent = formatTime(audio.currentTime);
       duration.textContent = formatTime(audio.duration);
       progressBar.setAttribute("aria-valuenow", percentage.toFixed(1));
+    };
+
+    const updateVolumeIcon = () => {
+      const isMuted = audio.muted || audio.volume === 0;
+      volumeIcon.innerHTML = `<i data-lucide="${isMuted ? "volume-x" : "volume-2"}"></i>`;
+      volumeToggle.setAttribute("aria-label", isMuted ? "Unmute" : "Mute");
+      volumeToggle.setAttribute("aria-pressed", isMuted ? "true" : "false");
+      window.lucide?.createIcons();
     };
 
     const animateProgress = () => {
@@ -115,6 +127,26 @@
       updateProgress();
     });
     audio.addEventListener("timeupdate", updateProgress);
+    volume.addEventListener("input", () => {
+      const nextVolume = Number(volume.value);
+      audio.volume = nextVolume;
+      audio.muted = nextVolume === 0;
+      if (nextVolume > 0) lastVolume = nextVolume;
+      volume.setAttribute("aria-valuenow", volume.value);
+      updateVolumeIcon();
+    });
+    volumeToggle.addEventListener("click", () => {
+      if (audio.muted || audio.volume === 0) {
+        audio.muted = false;
+        audio.volume = lastVolume || 0.8;
+        volume.value = audio.volume;
+        volume.setAttribute("aria-valuenow", volume.value);
+      } else {
+        lastVolume = audio.volume;
+        audio.muted = true;
+      }
+      updateVolumeIcon();
+    });
     audio.addEventListener("loadedmetadata", () => {
       updateProgress();
       duration.textContent = formatTime(audio.duration);
@@ -125,6 +157,8 @@
       audio.currentTime += event.key === "ArrowRight" ? 5 : -5;
       updateProgress();
     });
+    audio.volume = Number(volume.value);
+    updateVolumeIcon();
     player.dataset.audioPlayerReady = "true";
   };
 

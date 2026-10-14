@@ -81,8 +81,15 @@
           Your browser does not support audio playback.
         </audio>
       </div>
+      <div class="mini-player-volume">
+        <button type="button" class="player-volume-toggle" data-player-volume-toggle aria-label="Mute" aria-pressed="false">
+          <span data-player-volume-icon><i data-lucide="volume-2"></i></span>
+        </button>
+        <input type="range" class="player-volume" data-player-volume min="0" max="1" step="0.01" value="0.8" aria-label="Volume" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.8">
+      </div>
     </section>
 
+    <script src="https://unpkg.com/lucide@0.468.0"></script>
     <%= javascript_include_tag "application.js", "data-turbo-track": "reload", defer: true %>
   </body>
 </html>
